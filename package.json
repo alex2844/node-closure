@@ -1,0 +1,24 @@
+{
+	"name": "node-closure",
+	"version": "1.0.0",
+	"description": "Converts ec6 to es5 and minimizes not only JavaScripts, but also CSS and HTML under the current directory tree",
+	"main": "module.js",
+	"dependencies": {
+		"babel-core": "^6.26.3",
+		"babel-preset-es2015": "^6.24.1",
+		"csso": "^3.5.1",
+		"glob": "^7.1.2",
+		"html-minifier": "^3.5.17",
+		"uglify-js": "^3.4.3"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/alex2844/node-closure.git"
+	},
+	"author": {
+		"name": "Alex Smith",
+		"email": "alex.smith2844@gmail.com",
+		"website": "https://www.qwedl.com/",
+		"github": "https://github.com/alex2844"
+	}
+}
