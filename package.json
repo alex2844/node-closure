@@ -1,6 +1,6 @@
 {
 	"name": "node-closure",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "Converts ec6 to es5 and minimizes not only JavaScripts, but also CSS and HTML under the current directory tree",
 	"main": "module.js",
 	"dependencies": {

@@ -15,7 +15,7 @@ module.exports = {
 		if (data == 0)
 			return '0 '+type[0];
 		if (min)
-			module.exports._i[min] += (data = Buffer.byteLength(data, 'utf8'));
+			module.exports._i[min] += (data = (data ? Buffer.byteLength(data, 'utf8') : 0));
 		var i = Math.floor(Math.log(data) / Math.log(1000));
 		if (i >= type.length)
 			i = type.length-1;
