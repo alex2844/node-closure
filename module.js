@@ -1,7 +1,7 @@
 var path = require('path'),
 	fs = require('fs'),
 	glob = require('glob'),
-	js_t = require('babel-core').transform,
+	js_t = require('es6-transpiler'),
 	js_m = require('uglify-js').minify,
 	css = require('csso').minify,
 	html = require('html-minifier').minify;
@@ -21,7 +21,7 @@ module.exports = {
 			i = type.length-1;
 		return (data/Math.pow(1000,i)).toFixed(3).replace('.000', '')+' '+type[i];
 	},
-	callback: res => {
+	callback: (res) => {
 		return (module.exports.debug ? console.log(JSON.stringify(res, undefined, 4)) : fs.writeFile(res.path, res.compiledCode, () => {}));
 	},
 	build: (mask='**/*.{js,css,html}') => {
@@ -29,23 +29,29 @@ module.exports = {
 			ignore: module.exports.ignore
 		}, (err, files) => {
 			console.log(['Compile app start', (new Date().toLocaleString())]);
-			return Promise.all(files.map(function(file) {
-				return (new Promise(function(resolve, reject) {
-					fs.readFile(file, 'utf8', function(err, res) {
+			return Promise.all(files.map(file => {
+				return (new Promise((resolve, reject) => {
+					fs.readFile(file, 'utf8', (err, res) => {
 						var compile, error;
 						try {
-							compile = (((path.extname(file) === '.js') && !res.match('require')) ? js_m(js_t(res, {
-								/* minified: true,
-								comments: false, */
-								presets: ['es2015']
-							}).code).code : ((path.extname(file) === '.css') ? css(res).css : ((path.extname(file) === '.html') ? html(res, {
-								collapseWhitespace: true,
-								removeComments: true,
-								removeRedundantAttributes: true,
-								removeScriptTypeAttributes: true,
-								removeTagWhitespace: true,
-								useShortDoctype: true
-							}) : res)));
+							if (path.extname(file) === '.js') {
+								if ((js_t.t = js_t.run({
+									src: res,
+									disallowDuplicated: false,
+									disallowUnknownReferences: false
+								})).src)
+									compile = js_m(js_t.t.src).code;
+								else
+									throw new Error(js_t.t.errors.join(' \n'));
+							}else
+								compile = ((path.extname(file) === '.css') ? css(res).css : ((path.extname(file) === '.html') ? html(res, {
+									collapseWhitespace: true,
+									removeComments: true,
+									removeRedundantAttributes: true,
+									removeScriptTypeAttributes: true,
+									removeTagWhitespace: true,
+									useShortDoctype: true
+								}) : res));
 						} catch(e) {
 							compile = res;
 							error = e.message;
@@ -58,11 +64,11 @@ module.exports = {
 							error: error
 						});
 					});
-				})).then(function(res) {
+				})).then(res => {
 					++module.exports._i[0];
 					return module.exports.callback(res);
 				});
-			})).then(function() {
+			})).then(() => {
 				console.log(JSON.stringify({
 					files: module.exports._i[0],
 					origSize: module.exports.size(module.exports._i[1]),
