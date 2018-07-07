@@ -34,6 +34,8 @@ module.exports = {
 					fs.readFile(file, 'utf8', (err, res) => {
 						var compile, error;
 						try {
+							if (file.match('min') || file.match('jquery') || res.match('jQuery'))
+								throw new Error('already minified');
 							if (path.extname(file) === '.js') {
 								if ((js_t.t = js_t.run({
 									src: res,
