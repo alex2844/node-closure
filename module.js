@@ -42,7 +42,9 @@ module.exports = {
 									disallowDuplicated: false,
 									disallowUnknownReferences: false
 								})).src)
-									compile = js_m(js_t.t.src).code;
+									compile = js_m(js_t.t.src, {
+										mangle: !file.match('\/api')
+									}).code;
 								else
 									throw new Error(js_t.t.errors.join(' \n'));
 							}else
